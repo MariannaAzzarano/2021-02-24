@@ -9,6 +9,7 @@ import java.util.List;
 import it.polito.tdp.PremierLeague.model.Action;
 import it.polito.tdp.PremierLeague.model.Match;
 import it.polito.tdp.PremierLeague.model.Player;
+import it.polito.tdp.PremierLeague.model.PlayerEfficenza;
 import it.polito.tdp.PremierLeague.model.Team;
 
 public class PremierLeagueDAO {
@@ -109,6 +110,39 @@ public class PremierLeagueDAO {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	
+	public List<PlayerEfficenza> listPlayerEfficenza(Match m){
+		
+		String sql = "SELECT p.PlayerID AS ID, p.Name AS nome, a.TeamID AS teamID,t.Name AS nomeTeam,  a.TotalSuccessfulPassesAll AS SP, a.Assists AS assist, a.TimePlayed AS TP "
+				+ "FROM actions a, players p, teams t "
+				+ "WHERE a.PlayerID = p.PlayerID  "
+				+ "      AND MatchID = ? "
+				+ "      AND t.TeamID = a.TeamID";
+		List<PlayerEfficenza> p_efficenza = new ArrayList<>();
+		Connection conn = DBConnect.getConnection();
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setInt(1, m.getMatchID());
+			ResultSet res = st.executeQuery();
+			while(res.next()) {
+				Team team = new Team(res.getInt("teamID"), res.getString("nomeTeam"));
+				Player player = new Player(res.getInt("ID"), res.getString("nome"));
+				player.setTeam(team);
+				Double SP = (double) res.getInt("SP");
+				Double AS = (double) res.getInt("assist");
+				Double TP = (double) res.getInt("TP");
+				Double efficenza = ((SP + AS)/TP);
+				PlayerEfficenza p_e = new PlayerEfficenza(player, efficenza, m.getMatchID());
+				p_efficenza.add(p_e);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return p_efficenza;
 	}
 	
 }

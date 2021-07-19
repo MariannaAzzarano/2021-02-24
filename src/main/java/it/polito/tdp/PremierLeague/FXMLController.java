@@ -8,6 +8,7 @@ package it.polito.tdp.PremierLeague;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.PremierLeague.model.GiocatoreMigliore;
 import it.polito.tdp.PremierLeague.model.Match;
 import it.polito.tdp.PremierLeague.model.Model;
 import javafx.event.ActionEvent;
@@ -47,16 +48,50 @@ public class FXMLController {
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
+    	txtResult.clear();
+    	Match match = cmbMatch.getValue();
+    	if(match == null) {
+    		txtResult.appendText("DEVI PRIMA SELEZIONARE UN MATCH!!");
+    		return;
+    	}
+    	model.creaGrafo(match);
+    	txtResult.appendText("GRAFO CREATO!!");
+    	txtResult.appendText("\n# VERTICI : " + model.nVertici());
+    	txtResult.appendText("\n# ARCHI : "  + model.nArchi());
+    	
     	
     }
 
     @FXML
-    void doGiocatoreMigliore(ActionEvent event) {    	
+    void doGiocatoreMigliore(ActionEvent event) {    
+    	if(model.getGrafo() != null) {
+    		Match m = cmbMatch.getValue();
+    		GiocatoreMigliore gm = model.getGiocatoreMigliore(m);
+    		txtResult.appendText("\n\n" + model.getGiocatoreMigliore(m));
+    		
+    	}
+    	else {
+    		txtResult.clear();
+    		txtResult.appendText("DEVI PRIMA CREARE IL GRAFO!!");
+    	}
     	
     }
     
     @FXML
     void doSimula(ActionEvent event) {
+    	txtResult.clear();
+    	if(model.getGrafo() != null) {
+    		Match m = cmbMatch.getValue();
+    		Integer N = Integer.parseInt(txtN.getText());
+    		if(N != null && m != null) {
+        		model.simula(m, N);
+        		txtResult.appendText("GOAL:  " + m.getTeamHomeNAME() +" - " + m.getTeamAwayNAME() + "    " + m.getGoalHome() + " - " + m.getGoalAway());
+        		txtResult.appendText("\nESPULSIONI:  " + m.getTeamHomeNAME() +" - " + m.getTeamAwayNAME() + "    " + m.getEspulsioniHome() + " - " + m.getEspulsioniAway());
+        	}
+    	}
+    	
+    	
+    	
 
     }
 
@@ -73,5 +108,6 @@ public class FXMLController {
     
     public void setModel(Model model) {
     	this.model = model;
+    	this.cmbMatch.getItems().addAll(model.getMatches());
     }
 }

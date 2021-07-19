@@ -2,7 +2,7 @@ package it.polito.tdp.PremierLeague.model;
 
 import java.time.LocalDateTime;
 
-public class Match {
+public class Match{
 	Integer matchID;
 	Integer teamHomeID;
 	Integer teamAwayID;
@@ -14,6 +14,14 @@ public class Match {
 	String teamAwayNAME;
 
 	LocalDateTime date;
+	
+	Integer goalHome;
+	Integer goalAway;
+	Integer espulsioniHome;
+	Integer espulsioniAway;
+	Integer infortuni;
+	
+	GiocatoreMigliore gm;
 	
 	public Match(Integer matchID, Integer teamHomeID, Integer teamAwayID, Integer teamHomeFormation,
 			Integer teamAwayFormation, Integer resultOfTeamHome, LocalDateTime date, String teamHomeNAME, String teamAwayNAME) {
@@ -125,5 +133,61 @@ public class Match {
 			return false;
 		return true;
 	}
+	
+	
+	public void azzeraSimulazione() {
+		this.goalHome = 0;
+		this.goalAway = 0;
+		this.espulsioniHome = 0;
+		this.espulsioniAway = 0;
+		this.infortuni = 0;
+	}
+	
+	public void segnaTeamHome() {
+		this.goalHome++;
+	}
+	
+	public void segnaTeamAway() {
+		this.goalAway++;
+	}
+	
+	public void espulsioneHome() {
+		this.espulsioniHome++;
+	}
+	
+	public void espulsioneAway() {
+		this.espulsioniAway++;
+	}
+
+	public Integer getGoalHome() {
+		return goalHome;
+	}
+
+	public Integer getGoalAway() {
+		return goalAway;
+	}
+
+	public Integer getEspulsioniHome() {
+		return espulsioniHome;
+	}
+
+	public Integer getEspulsioniAway() {
+		return espulsioniAway;
+	}
+
+	public Integer getInfortuni() {
+		return infortuni;
+	}
+	
+	public void setGiocatoreMigliore(GiocatoreMigliore g) {
+		this.gm = g;
+	}
+	
+	public GiocatoreMigliore getGiocatoreMigliore() {
+		return this.gm;
+	}
+	
+	
+	
 	
 }
